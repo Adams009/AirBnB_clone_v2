@@ -1,23 +1,29 @@
 #!/usr/bin/python3
-"""Module base_model
+""" User class"""
+import models
+from models.base_model import BaseModel, Base
+from os import getenv
+import sqlalchemy
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
 
-The Module User Class
-"""
 
-from models.base_model import BaseModel
+class User(BaseModel, Base):
+    """ user database creation"""
+    if models.storage_t == 'db':
+        __tablename__ = 'users'
+        email = Column(String(128), nullable=False)
+        password = Column(String(128), nullable=False)
+        first_name = Column(String(128), nullable=True)
+        last_name = Column(String(128), nullable=True)
+        places = relationship("Place", backref="user")
+        reviews = relationship("Review", backref="user")
+    else:
+        email = ""
+        password = ""
+        first_name = ""
+        last_name = ""
 
-
-class User(BaseModel):
-    """A class for user.
-
-    Attributes:
-        email (str): The emai
-        password (str): The password
-        first_name (str): The first name
-        last_name (str): The last name
-    """
-
-    email = ""
-    password = ""
-    first_name = ""
-    last_name = ""
+    def __init__(self, *args, **kwargs):
+        """init of user"""
+        super().__init__(*args, **kwargs)
